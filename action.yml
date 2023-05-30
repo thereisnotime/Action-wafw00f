@@ -1,0 +1,34 @@
+# action.yml
+name: "thereisnotime/action-wafw00f"
+description: "Run wafw00f in your GitHub Actions workflow"
+
+inputs:
+  url:
+    description: "Target URL (e.g. http://www.blackfox-security.com"
+    required: true
+    default: ""
+  additional_args:
+    description: "Additional arguments to pass to wafw00f. Default is -a to run all WAF checks."
+    required: false
+    default: "-a"
+
+runs:
+  using: "docker"
+  image: "Dockerfile"
+  entrypoint: /bin/sh
+  args:
+    - -c
+    - |
+      args="${{ inputs.url }}"
+      additional_args="${{ inputs.additional_args }}"
+      set -- $additional_args
+      for arg do
+        args="$args $arg"
+      done
+      cd /code
+      echo $args
+      exec wafw00f $args
+
+branding:
+  icon: "map"
+  color: "red"

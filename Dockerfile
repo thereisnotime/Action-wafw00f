@@ -1,0 +1,1 @@
+FROM secsi/wafw00f:latest
